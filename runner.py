@@ -68,10 +68,12 @@ if __name__ == '__main__':
     sys.stdout = open(path, 'w')
 
     # load image
-    image = PIL.Image.open("./data/dog.jpg")
+    image_path = "./data/fireboat.jpeg"
+    image = PIL.Image.open(image_path)
     input_image = preprocess(image)
     input_batch = input_image.unsqueeze(0)
-    label_name = "Samoyed"
+    image_name = "fireboat"
+    label_name = "fireboat"
 
     # print original predictions
     topk_pred_orig = get_topk_pred(input_image, MODEL, CATEGORIES)
@@ -83,7 +85,7 @@ if __name__ == '__main__':
     zero_out_threshold = 0.1
     explanation_ig = get_explanation_ig(MODEL, input_batch, CATEGORIES, label_name)
     topk_pred_ig = evaluate_pixel_based_methods(explanation=explanation_ig, input_image=input_image, image=image,
-                                                image_name="samoyed_ig", model=MODEL, categories=CATEGORIES,
+                                                image_name=image_name + "_ig", model=MODEL, categories=CATEGORIES,
                                                 threshold=zero_out_threshold)
     print("\nIntegrated Gradient prediction")
     prettyprint_tuple(topk_pred_ig)
@@ -91,7 +93,7 @@ if __name__ == '__main__':
     # local data matrix
     explanation_ldm = get_explanation_ldm(MODEL, input_batch)
     topk_pred_ldm = evaluate_pixel_based_methods(explanation=explanation_ldm, input_image=input_image, image=image,
-                                                 image_name="samoyed_ldm", model=MODEL, categories=CATEGORIES,
+                                                 image_name=image_name + "_ldm", model=MODEL, categories=CATEGORIES,
                                                  threshold=zero_out_threshold)
     print("\nLocal Data Matrix prediction")
     prettyprint_tuple(topk_pred_ldm)
@@ -100,14 +102,14 @@ if __name__ == '__main__':
     features_to_plot = (10, 30, 80)
     lime_explanation = get_lime_explainer(image, top_label=0, num_features=5)
     topk_pred_lime = evaluate_lime(lime_explanation, input_image=input_image,
-                                   image_name="samoyed_lime_5", model=MODEL, categories=CATEGORIES,
+                                   image_name=image_name + "_lime_5", model=MODEL, categories=CATEGORIES,
                                    num_features_tuple_plot=features_to_plot)
     print("\nLIME prediction 5 features")
     prettyprint_tuple(topk_pred_lime)
 
     lime_explanation = get_lime_explainer(image, top_label=0, num_features=20)
     topk_pred_lime = evaluate_lime(lime_explanation, input_image=input_image,
-                                   image_name="samoyed_lime_20", model=MODEL, categories=CATEGORIES,
+                                   image_name=image_name + "_lime_20", model=MODEL, categories=CATEGORIES,
                                    num_features_tuple_plot=features_to_plot)
     print("\nLIME prediction 20 features")
     prettyprint_tuple(topk_pred_lime)
