@@ -3,6 +3,7 @@ import torch
 
 
 def get_eigenvectors_ldm(model, input_batch):
+    input_batch.requires_grad = True
     output = model(input_batch)
     prob = output.softmax(-1)
     log_prob = prob.log()

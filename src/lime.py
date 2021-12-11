@@ -5,6 +5,7 @@ from skimage.segmentation import mark_boundaries
 from torch import nn
 from torchvision import transforms
 from lime import lime_image
+from src.GLOBAL_VARS import MODEL
 
 
 def get_pil_transform():
@@ -31,21 +32,20 @@ pill_transf = get_pil_transform()
 preprocess_transform = get_preprocess_transform()
 
 
-def batch_predict(model, images):
+def batch_predict(images):
     """
 
-    :param model:
     :param images: image here is from Image.open(filename)
     :return:
     """
-    model.eval()
+    MODEL.eval()
     batch = torch.stack(tuple(preprocess_transform(i) for i in images), dim=0)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model.to(device)
+    MODEL.to(device)
     batch = batch.to(device)
 
-    logits = model(batch)
+    logits = MODEL(batch)
     probs = nn.functional.softmax(logits, dim=1)
     return probs.detach().cpu().numpy()
 
@@ -69,10 +69,10 @@ def get_lime_explainer(image, top_label=0, num_features=5):
     return explanation, temp, mask
 
 
-def plot_boundaries(explanation, top_label=0, num_features=(10, 50, 100)):
-    for x in num_features:
-        temp, mask = explanation.get_image_and_mask(explanation.top_labels[top_label], positive_only=False,
-                                                    num_features=x, hide_rest=False)
-        img_boundry2 = mark_boundaries(temp / 255.0, mask)
-        plt.imshow(img_boundry2)
-        plt.show()
+def get_boundaries(explanation, top_label=0, num_features=10):
+    temp, mask = explanation.get_image_and_mask(explanation.top_labels[top_label], positive_only=False,
+                                                num_features=num_features, hide_rest=False)
+    img_boundry = mark_boundaries(temp / 255.0, mask)
+    # plt.imshow(img_boundry)
+    # plt.show()
+    return img_boundry

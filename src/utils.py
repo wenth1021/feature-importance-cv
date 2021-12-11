@@ -58,8 +58,6 @@ def get_topk_pred(input_image, model, categories, k=5):
     return top_k
 
 
-# def predict(output, categories, k=5):
-#     probs = torch.nn.functional.softmax(output[-1], dim=0)
-#     probs_k = probs.topk(k)
-#     predictions = tuple((p, c, categories[c]) for p, c in zip(probs_k[0].detach().numpy(), probs_k[1].detach().numpy()))
-#     return predictions
+def prettyprint_tuple(t):
+    for x in t:
+        print(x)
