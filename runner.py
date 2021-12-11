@@ -64,16 +64,17 @@ def evaluate_lime(lime_explanation, input_image, model, categories, image_name, 
 
 
 if __name__ == '__main__':
-    path = './outputs/results.txt'
-    sys.stdout = open(path, 'w')
 
     # load image
-    image_path = "./data/fireboat.jpeg"
+    image_path = "./data/dog.jpg"
     image = PIL.Image.open(image_path)
     input_image = preprocess(image)
     input_batch = input_image.unsqueeze(0)
-    image_name = "fireboat"
-    label_name = "fireboat"
+    image_name = "samoyed"
+    label_name = "Samoyed"
+
+    path = './outputs/results_' + image_name + '.txt'
+    sys.stdout = open(path, 'w')
 
     # print original predictions
     topk_pred_orig = get_topk_pred(input_image, MODEL, CATEGORIES)
