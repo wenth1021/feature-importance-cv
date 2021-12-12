@@ -9,6 +9,7 @@ import PIL.Image
 
 IMAGE_OUTPUT_PATH = "outputs/images/"
 
+torch.cuda.is_available = lambda: False;
 
 def evaluate_pixel_based_methods(explanation, input_image, image, image_name, model, categories, threshold=0.1):
     explanation = (explanation - torch.mean(explanation)) / torch.std(explanation, unbiased=False)
@@ -81,38 +82,38 @@ if __name__ == '__main__':
     print("Original prediction")
     prettyprint_tuple(topk_pred_orig)
 
-    # integrated gradient
-    step = 50
+    # # integrated gradient
+    # step = 50
     zero_out_threshold = 0.1
-    explanation_ig = get_explanation_ig(MODEL, input_batch, CATEGORIES, label_name)
-    topk_pred_ig = evaluate_pixel_based_methods(explanation=explanation_ig, input_image=input_image, image=image,
-                                                image_name=image_name + "_ig", model=MODEL, categories=CATEGORIES,
-                                                threshold=zero_out_threshold)
-    print("\nIntegrated Gradient prediction")
-    prettyprint_tuple(topk_pred_ig)
+    # explanation_ig = get_explanation_ig(MODEL, input_batch, CATEGORIES, label_name)
+    # topk_pred_ig = evaluate_pixel_based_methods(explanation=explanation_ig, input_image=input_image, image=image,
+    #                                             image_name=image_name + "_ig", model=MODEL, categories=CATEGORIES,
+    #                                             threshold=zero_out_threshold)
+    # print("\nIntegrated Gradient prediction")
+    # prettyprint_tuple(topk_pred_ig)
 
     # local data matrix
-    explanation_ldm = get_explanation_ldm(MODEL, input_batch)
+    explanation_ldm = get_explanation_ldm(MODEL, input_batch, CATEGORIES, label_name)
     topk_pred_ldm = evaluate_pixel_based_methods(explanation=explanation_ldm, input_image=input_image, image=image,
                                                  image_name=image_name + "_ldm", model=MODEL, categories=CATEGORIES,
                                                  threshold=zero_out_threshold)
     print("\nLocal Data Matrix prediction")
     prettyprint_tuple(topk_pred_ldm)
 
-    # lime
-    features_to_plot = (10, 30, 80)
-    lime_explanation = get_lime_explainer(image, top_label=0, num_features=5)
-    topk_pred_lime = evaluate_lime(lime_explanation, input_image=input_image,
-                                   image_name=image_name + "_lime_5", model=MODEL, categories=CATEGORIES,
-                                   num_features_tuple_plot=features_to_plot)
-    print("\nLIME prediction 5 features")
-    prettyprint_tuple(topk_pred_lime)
+    # # lime
+    # features_to_plot = (10, 30, 80)
+    # lime_explanation = get_lime_explainer(image, top_label=0, num_features=5)
+    # topk_pred_lime = evaluate_lime(lime_explanation, input_image=input_image,
+    #                                image_name=image_name + "_lime_5", model=MODEL, categories=CATEGORIES,
+    #                                num_features_tuple_plot=features_to_plot)
+    # print("\nLIME prediction 5 features")
+    # prettyprint_tuple(topk_pred_lime)
 
-    lime_explanation = get_lime_explainer(image, top_label=0, num_features=20)
-    topk_pred_lime = evaluate_lime(lime_explanation, input_image=input_image,
-                                   image_name=image_name + "_lime_20", model=MODEL, categories=CATEGORIES,
-                                   num_features_tuple_plot=features_to_plot)
-    print("\nLIME prediction 20 features")
-    prettyprint_tuple(topk_pred_lime)
+    # lime_explanation = get_lime_explainer(image, top_label=0, num_features=20)
+    # topk_pred_lime = evaluate_lime(lime_explanation, input_image=input_image,
+    #                                image_name=image_name + "_lime_20", model=MODEL, categories=CATEGORIES,
+    #                                num_features_tuple_plot=features_to_plot)
+    # print("\nLIME prediction 20 features")
+    # prettyprint_tuple(topk_pred_lime)
 
     sys.stdout = sys.__stdout__
