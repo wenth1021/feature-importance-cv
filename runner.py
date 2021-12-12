@@ -12,7 +12,7 @@ IMAGE_OUTPUT_PATH = "outputs/images/"
 torch.cuda.is_available = lambda: False;
 
 def evaluate_pixel_based_methods(explanation, input_image, image, image_name, model, categories, threshold=0.1):
-    explanation = (explanation - torch.mean(explanation)) / torch.std(explanation, unbiased=False)
+    explanation = (explanation - torch.mean(explanation)) / torch.std(explanation, unbiased=False)  # TODO
     input_image_w_gradient = input_image.clone()
     input_image_w_gradient[abs(explanation) < threshold] = 0
 
@@ -68,11 +68,11 @@ if __name__ == '__main__':
 
     # load image
     image_path = "./data/dog.jpg"
+    image_name = "samoyed"
+    label_name = "Samoyed"
     image = PIL.Image.open(image_path)
     input_image = preprocess(image)
     input_batch = input_image.unsqueeze(0)
-    image_name = "samoyed"
-    label_name = "Samoyed"
 
     path = './outputs/results_' + image_name + '.txt'
     sys.stdout = open(path, 'w')
