@@ -10,8 +10,16 @@ import PIL.Image
 IMAGE_OUTPUT_PATH = "outputs/images/"
 
 
+def normalize_explanations(explanation, standardize=True):
+    if standardize:
+        explanation = (explanation - torch.mean(explanation)) / torch.std(explanation, unbiased=False)
+    else:
+        explanation = (explanation - torch.min(explanation))/(torch.max(explanation) - torch.min(explanation))
+    return explanation
+
+
 def evaluate_pixel_based_methods(explanation, input_image, image, image_name, model, categories, threshold=0.1):
-    explanation = (explanation - torch.mean(explanation)) / torch.std(explanation, unbiased=False)
+    explanation = normalize_explanations(explanation, standardize=True)
     input_image_w_gradient = input_image.clone()
     input_image_w_gradient[abs(explanation) < threshold] = 0
 
@@ -66,38 +74,41 @@ def evaluate_lime(lime_explanation, input_image, model, categories, image_name, 
 if __name__ == '__main__':
 
     # load image
-    image_path = "./data/dog.jpg"
+    image_path = "./data/fireboat.jpeg"
+    image_name = "fireboat"
+    label_name = "fireboat"
     image = PIL.Image.open(image_path)
     input_image = preprocess(image)
     input_batch = input_image.unsqueeze(0)
-    image_name = "samoyed"
-    label_name = "Samoyed"
 
-    path = './outputs/results_' + image_name + '.txt'
-    sys.stdout = open(path, 'w')
+    path = './outputs/results_' + image_name + "_std" + '.txt'
+    # sys.stdout = open(path, 'w')
 
     # print original predictions
     topk_pred_orig = get_topk_pred(input_image, MODEL, CATEGORIES)
     print("Original prediction")
     prettyprint_tuple(topk_pred_orig)
+    output_predictions(topk_pred_orig, path, result_type="Original_prediction", output_type="w")
 
     # integrated gradient
     step = 50
     zero_out_threshold = 0.1
     explanation_ig = get_explanation_ig(MODEL, input_batch, CATEGORIES, label_name)
     topk_pred_ig = evaluate_pixel_based_methods(explanation=explanation_ig, input_image=input_image, image=image,
-                                                image_name=image_name + "_ig", model=MODEL, categories=CATEGORIES,
+                                                image_name=image_name + "_ig_std", model=MODEL, categories=CATEGORIES,
                                                 threshold=zero_out_threshold)
     print("\nIntegrated Gradient prediction")
     prettyprint_tuple(topk_pred_ig)
+    output_predictions(topk_pred_ig, path, result_type="Integrated Gradient prediction", output_type="a")
 
     # local data matrix
     explanation_ldm = get_explanation_ldm(MODEL, input_batch)
     topk_pred_ldm = evaluate_pixel_based_methods(explanation=explanation_ldm, input_image=input_image, image=image,
-                                                 image_name=image_name + "_ldm", model=MODEL, categories=CATEGORIES,
+                                                 image_name=image_name + "_ldm_std", model=MODEL, categories=CATEGORIES,
                                                  threshold=zero_out_threshold)
     print("\nLocal Data Matrix prediction")
     prettyprint_tuple(topk_pred_ldm)
+    output_predictions(topk_pred_ig, path, result_type="Local Data Matrix prediction", output_type="a")
 
     # lime
     features_to_plot = (10, 30, 80)
@@ -107,6 +118,7 @@ if __name__ == '__main__':
                                    num_features_tuple_plot=features_to_plot)
     print("\nLIME prediction 5 features")
     prettyprint_tuple(topk_pred_lime)
+    output_predictions(topk_pred_lime, path, result_type="LIME prediction 5 features", output_type="a")
 
     lime_explanation = get_lime_explainer(image, top_label=0, num_features=20)
     topk_pred_lime = evaluate_lime(lime_explanation, input_image=input_image,
@@ -114,5 +126,4 @@ if __name__ == '__main__':
                                    num_features_tuple_plot=features_to_plot)
     print("\nLIME prediction 20 features")
     prettyprint_tuple(topk_pred_lime)
-
-    sys.stdout = sys.__stdout__
+    output_predictions(topk_pred_lime, path, result_type="LIME prediction 20 features", output_type="a")

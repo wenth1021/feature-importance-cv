@@ -61,3 +61,12 @@ def get_topk_pred(input_image, model, categories, k=5):
 def prettyprint_tuple(t):
     for x in t:
         print(x)
+
+
+def output_predictions(t, path, result_type, output_type="w"):
+    with open(path, output_type) as f:
+        f.write(result_type)
+        for line in t:
+            f.write(str(line))
+            f.write('\n')
+        f.write('\n')
