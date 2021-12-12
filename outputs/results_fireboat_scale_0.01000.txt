@@ -1,0 +1,14 @@
+Original_prediction
+(0.97269326, 554, 'fireboat')
+(0.02241052, 718, 'pier')
+(0.0010487969, 517, 'crane')
+(0.0008778324, 821, 'steel arch bridge')
+(0.00079347537, 839, 'suspension bridge')
+
+Integrated Gradient prediction
+(0.59101015, 562, 'fountain')
+(0.15508318, 489, 'chainlink fence')
+(0.1440161, 554, 'fireboat')
+(0.0100931, 743, 'prison')
+(0.009167315, 421, 'bannister')
+

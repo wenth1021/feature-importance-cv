@@ -19,3 +19,17 @@ Local Data Matrix prediction
 (0.030547915, 72, 'black and gold garden spider')
 (0.02904181, 74, 'garden spider')
 
+LIME prediction 5 features
+(0.9070915, 554, 'fireboat')
+(0.0114718955, 460, 'breakwater')
+(0.010658539, 871, 'trimaran')
+(0.008225534, 780, 'schooner')
+(0.006304264, 510, 'container ship')
+
+LIME prediction 20 features
+(0.99633455, 554, 'fireboat')
+(0.0014362719, 718, 'pier')
+(0.0011424987, 821, 'steel arch bridge')
+(0.00026165537, 517, 'crane')
+(0.0001410595, 562, 'fountain')
+

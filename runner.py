@@ -18,15 +18,15 @@ def normalize_explanations(explanation, explanation_norm_type):
     """
     if explanation_norm_type == "std":
         explanation = (explanation - torch.mean(explanation)) / torch.std(explanation, unbiased=False)
-    if explanation_norm_type == "minmax":
+    elif explanation_norm_type == "minmax":
         maxval = torch.max(explanation)
         minval = torch.min(explanation)
         explanation_std = (explanation - minval) / (maxval - minval)
         explanation = explanation_std * (maxval - minval) + minval
-    if explanation_norm_type == "scale":
+    elif explanation_norm_type == "scale":
         maxval = torch.max(explanation)
         explanation = explanation/maxval
-    if explanation_norm_type == "none":
+    elif explanation_norm_type == "none":
         explanation = explanation
     else:
         raise ValueError
@@ -92,10 +92,10 @@ if __name__ == '__main__':
     image_path = "./data/fireboat.jpeg"
     image_name = "fireboat"
     label_name = "fireboat"
-    explanation_norm_type = "minmax"
+    explanation_norm_type = "scale"
     zero_out_threshold = 0.01
     path = './outputs/results_' + image_name + "_" + \
-           explanation_norm_type + "_" + "{:.2f}".format(zero_out_threshold) + '.txt'
+           explanation_norm_type + "_" + "{:.5f}".format(zero_out_threshold) + '.txt'
 
     # load image
     image = PIL.Image.open(image_path)
@@ -113,7 +113,7 @@ if __name__ == '__main__':
     explanation_ig = get_explanation_ig(MODEL, input_batch, CATEGORIES, label_name)
     topk_pred_ig = evaluate_pixel_based_methods(
         explanation=explanation_ig, input_image=input_image, image=image,
-        image_name=image_name + "_ig" + "_" + explanation_norm_type + "_" + "{:.2f}".format(zero_out_threshold),
+        image_name=image_name + "_ig" + "_" + explanation_norm_type + "_" + "{:.5f}".format(zero_out_threshold),
         model=MODEL,
         categories=CATEGORIES,
         threshold=zero_out_threshold,
@@ -127,7 +127,7 @@ if __name__ == '__main__':
     explanation_ldm = get_explanation_ldm(MODEL, input_batch)
     topk_pred_ldm = evaluate_pixel_based_methods(
         explanation=explanation_ldm, input_image=input_image, image=image,
-        image_name=image_name + "_ldm" + "_" + explanation_norm_type + "_" + "{:.2f}".format(zero_out_threshold),
+        image_name=image_name + "_ldm" + "_" + explanation_norm_type + "_" + "{:.5f}".format(zero_out_threshold),
         model=MODEL,
         categories=CATEGORIES,
         threshold=zero_out_threshold,
