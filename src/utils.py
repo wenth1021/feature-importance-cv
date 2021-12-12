@@ -66,6 +66,7 @@ def prettyprint_tuple(t):
 def output_predictions(t, path, result_type, output_type="w"):
     with open(path, output_type) as f:
         f.write(result_type)
+        f.write('\n')
         for line in t:
             f.write(str(line))
             f.write('\n')
