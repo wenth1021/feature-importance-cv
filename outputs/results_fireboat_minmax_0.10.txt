@@ -1,0 +1,35 @@
+Original_prediction
+(0.97269326, 554, 'fireboat')
+(0.02241052, 718, 'pier')
+(0.0010487969, 517, 'crane')
+(0.0008778324, 821, 'steel arch bridge')
+(0.00079347537, 839, 'suspension bridge')
+
+Integrated Gradient prediction
+(0.052492265, 623, 'letter opener')
+(0.037672028, 111, 'nematode')
+(0.024667177, 499, 'cleaver')
+(0.02004652, 813, 'spatula')
+(0.019069832, 596, 'hatchet')
+
+Local Data Matrix prediction
+(0.052492265, 623, 'letter opener')
+(0.037672028, 111, 'nematode')
+(0.024667177, 499, 'cleaver')
+(0.02004652, 813, 'spatula')
+(0.019069832, 596, 'hatchet')
+
+LIME prediction 5 features
+(0.9070915, 554, 'fireboat')
+(0.0114718955, 460, 'breakwater')
+(0.010658539, 871, 'trimaran')
+(0.008225534, 780, 'schooner')
+(0.006304264, 510, 'container ship')
+
+LIME prediction 20 features
+(0.99903846, 554, 'fireboat')
+(0.00029264236, 718, 'pier')
+(0.0001379275, 821, 'steel arch bridge')
+(0.0001091493, 517, 'crane')
+(9.284483e-05, 562, 'fountain')
+

@@ -13,13 +13,23 @@ def normalize_explanations(explanation, explanation_norm_type):
     """
 
     :param explanation: np array
-    :param explanation_norm_type: takes in std or minmax
+    :param explanation_norm_type: takes in std, minmax, or scale
     :return:
     """
     if explanation_norm_type == "std":
         explanation = (explanation - torch.mean(explanation)) / torch.std(explanation, unbiased=False)
+    if explanation_norm_type == "minmax":
+        maxval = torch.max(explanation)
+        minval = torch.min(explanation)
+        explanation_std = (explanation - minval) / (maxval - minval)
+        explanation = explanation_std * (maxval - minval) + minval
+    if explanation_norm_type == "scale":
+        maxval = torch.max(explanation)
+        explanation = explanation/maxval
+    if explanation_norm_type == "none":
+        explanation = explanation
     else:
-        explanation = (explanation - torch.min(explanation)) / (torch.max(explanation) - torch.min(explanation))
+        raise ValueError
     return explanation
 
 
@@ -28,7 +38,6 @@ def evaluate_pixel_based_methods(explanation, input_image, image, image_name, mo
     explanation = normalize_explanations(explanation, explanation_norm_type=explanation_norm_type)
     input_image_w_gradient = input_image.clone()
     input_image_w_gradient[abs(explanation) < threshold] = 0
-    print("input_image_w_gradient shape", input_image_w_gradient.shape)
 
     # plot
     gradient_and_orig = pil_image(Visualize(
@@ -83,8 +92,8 @@ if __name__ == '__main__':
     image_path = "./data/fireboat.jpeg"
     image_name = "fireboat"
     label_name = "fireboat"
-    explanation_norm_type = "std"
-    zero_out_threshold = 0.1
+    explanation_norm_type = "minmax"
+    zero_out_threshold = 0.01
     path = './outputs/results_' + image_name + "_" + \
            explanation_norm_type + "_" + "{:.2f}".format(zero_out_threshold) + '.txt'
 

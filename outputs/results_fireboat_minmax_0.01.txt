@@ -1,0 +1,21 @@
+Original_prediction
+(0.97269326, 554, 'fireboat')
+(0.02241052, 718, 'pier')
+(0.0010487969, 517, 'crane')
+(0.0008778324, 821, 'steel arch bridge')
+(0.00079347537, 839, 'suspension bridge')
+
+Integrated Gradient prediction
+(0.052492265, 623, 'letter opener')
+(0.037672028, 111, 'nematode')
+(0.024667177, 499, 'cleaver')
+(0.02004652, 813, 'spatula')
+(0.019069832, 596, 'hatchet')
+
+Local Data Matrix prediction
+(0.46483672, 815, 'spider web')
+(0.07333101, 73, 'barn spider')
+(0.0450367, 111, 'nematode')
+(0.030547915, 72, 'black and gold garden spider')
+(0.02904181, 74, 'garden spider')
+
