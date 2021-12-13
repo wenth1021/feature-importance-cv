@@ -71,3 +71,27 @@ def output_predictions(t, path, result_type, output_type="w"):
             f.write(str(line))
             f.write('\n')
         f.write('\n')
+
+
+def normalize_arr(arr, explanation_norm_type):
+    """
+
+    :param arr: tensor of any shape
+    :param explanation_norm_type: takes in std, minmax, or scale
+    :return:
+    """
+    if explanation_norm_type == "std":
+        arr = (arr - torch.mean(arr)) / torch.std(arr, unbiased=False)
+    elif explanation_norm_type == "minmax":
+        maxval = torch.max(arr)
+        minval = torch.min(arr)
+        explanation_std = (arr - minval) / (maxval - minval)
+        arr = explanation_std * (maxval - minval) + minval
+    elif explanation_norm_type == "scale":
+        maxval = torch.max(arr)
+        arr = arr / maxval
+    elif explanation_norm_type == "none":
+        arr = arr
+    else:
+        raise ValueError
+    return arr
