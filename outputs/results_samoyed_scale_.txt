@@ -1,0 +1,7 @@
+Original_prediction
+(0.83719707, 258, 'Samoyed')
+(0.060999483, 270, 'white wolf')
+(0.039010566, 261, 'keeshond')
+(0.02333681, 259, 'Pomeranian')
+(0.013027882, 279, 'Arctic fox')
+
