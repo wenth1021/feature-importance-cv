@@ -164,7 +164,7 @@ if __name__ == '__main__':
     image_path = "./data/dog.jpg"
     image_name = "samoyed"
     label_name = "Samoyed"
-    explanation_norm_type = "scale"
+    explanation_norm_type = "none"
     path = './outputs/results_' + image_name + '_' + explanation_norm_type + '.txt'
 
     # load image
@@ -215,7 +215,7 @@ if __name__ == '__main__':
         model=MODEL,
         categories=CATEGORIES,
         correct_label=label_name,
-        explanation_norm_type='none',
+        explanation_norm_type=explanation_norm_type,
         num_x=200,
         x_type="percentile",
     )
@@ -233,7 +233,7 @@ if __name__ == '__main__':
         model=MODEL,
         categories=CATEGORIES,
         correct_label=label_name,
-        explanation_norm_type='none',
+        explanation_norm_type=explanation_norm_type,
         num_x=200,
         x_type="percentile",
     )
