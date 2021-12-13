@@ -13,9 +13,9 @@ LIME prediction 5 features
 (0.022541411, 222, 'kuvasz')
 
 LIME prediction 20 features
-(0.91714156, 258, 'Samoyed')
-(0.0269022, 261, 'keeshond')
-(0.016138496, 270, 'white wolf')
-(0.014773349, 259, 'Pomeranian')
-(0.005158326, 279, 'Arctic fox')
+(0.8932572, 258, 'Samoyed')
+(0.024814451, 259, 'Pomeranian')
+(0.024214093, 261, 'keeshond')
+(0.018066831, 270, 'white wolf')
+(0.011897295, 203, 'West Highland white terrier')
 

@@ -13,9 +13,9 @@ LIME prediction 5 features
 (0.006304264, 510, 'container ship')
 
 LIME prediction 20 features
-(0.99867463, 554, 'fireboat')
-(0.00042380707, 718, 'pier')
-(0.00038190337, 562, 'fountain')
-(0.00019755434, 821, 'steel arch bridge')
-(8.040478e-05, 871, 'trimaran')
+(0.9938273, 554, 'fireboat')
+(0.002540346, 562, 'fountain')
+(0.0014390195, 718, 'pier')
+(0.00043061332, 821, 'steel arch bridge')
+(0.00035906114, 460, 'breakwater')
 

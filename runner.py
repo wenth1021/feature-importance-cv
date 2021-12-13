@@ -165,9 +165,9 @@ def evaluate_lime(lime_explanation, input_image, model, categories, image_name, 
 
 if __name__ == '__main__':
     # setting vars
-    image_path = "data/junco.jpeg"
-    image_name = "junco"
-    label_name = "junco"
+    image_path = "data/samoyed.jpg"
+    image_name = "samoyed"
+    label_name = "Samoyed"
     explanation_norm_type = "none"
     path = './outputs/results_' + image_name + '_' + explanation_norm_type + '.txt'
 
