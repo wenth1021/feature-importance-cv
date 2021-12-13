@@ -28,7 +28,7 @@ def normalize_explanations(explanation, explanation_norm_type):
         explanation = explanation_std * (maxval - minval) + minval
     elif explanation_norm_type == "scale":
         maxval = torch.max(explanation)
-        explanation = explanation/maxval
+        explanation = explanation / maxval
     elif explanation_norm_type == "none":
         explanation = explanation
     else:
@@ -73,7 +73,7 @@ def evaluate_pixel_based_methods(explanation, input_image, image, image_name, mo
     return topk_pred
 
 
-def evaluate_pixel_based_methods_max_probability(explanation, input_image, image_name, model, categories,
+def evaluate_pixel_based_methods_threshold_range(explanation, input_image, image_name, model, categories,
                                                  correct_label, explanation_norm_type):
     # takes in single image!
     explanation = normalize_explanations(explanation, explanation_norm_type=explanation_norm_type)
@@ -82,7 +82,7 @@ def evaluate_pixel_based_methods_max_probability(explanation, input_image, image
 
     for i in range(threshold.shape[0]):
         input_image_w_gradient = input_image.clone()
-        input_image_w_gradient[abs(explanation) < threshold[i]] = 0
+        input_image_w_gradient[abs(explanation) > threshold[i]] = 0
         output = model(input_image_w_gradient.unsqueeze(0))
         probabilities = torch.nn.functional.softmax(output[-1], dim=0)
         prob = probabilities[categories.index(correct_label)].item()
@@ -100,6 +100,45 @@ def evaluate_pixel_based_methods_max_probability(explanation, input_image, image
     ax.set_title(image_name)
     ax.plot(threshold, prob_correct_label)
     ax.set_xlabel('Explanation Threshold')
+    ax.set_ylabel('Probability of Correct Label')
+    ax.text(0.7, 0.95, textstr, transform=ax.transAxes, fontsize=10,
+            verticalalignment='top', bbox=props)
+    plt.show()
+    plt.savefig(PLOT_OUTPUT_PATH + image_name + ".jpg")
+
+    max_id = np.argmax(np.array(prob_correct_label))
+
+    return max_threshold, max_probability
+
+
+def evaluate_pixel_based_methods_percentile_range(explanation, input_image, image_name, model, categories,
+                                                  correct_label, explanation_norm_type):
+    # takes in single image!
+    explanation = normalize_explanations(explanation, explanation_norm_type=explanation_norm_type)
+    prob_correct_label = []
+    threshold = np.arange(200) * 0.005
+
+    for i in range(threshold.shape[0]):
+        input_image_w_gradient = input_image.clone()
+        thres = torch.quantile(abs(explanation), threshold[i])
+        input_image_w_gradient[abs(explanation) < thres] = 0
+        output = model(input_image_w_gradient.unsqueeze(0))
+        probabilities = torch.nn.functional.softmax(output[-1], dim=0)
+        prob = probabilities[categories.index(correct_label)].item()
+        prob_correct_label.append(prob)
+
+    # plot
+    max_id = np.argmax(np.array(prob_correct_label))
+    max_threshold, max_probability = threshold[max_id], prob_correct_label[max_id]
+    textstr = '\n'.join((
+        r'$Max Prob=%.4f$' % (max_probability,),
+        r'$Max Thres=%.4f$' % (max_threshold,)))
+    props = dict(boxstyle='round', facecolor='white', alpha=0.5)
+
+    fig, ax = plt.subplots()
+    ax.set_title(image_name)
+    ax.plot(threshold, prob_correct_label)
+    ax.set_xlabel('Lower Percentile Eliminated')
     ax.set_ylabel('Probability of Correct Label')
     ax.text(0.7, 0.95, textstr, transform=ax.transAxes, fontsize=10,
             verticalalignment='top', bbox=props)
@@ -130,9 +169,9 @@ def evaluate_lime(lime_explanation, input_image, model, categories, image_name, 
 
 if __name__ == '__main__':
     # setting vars
-    image_path = "./data/bird.jpeg"
-    image_name = "bird"
-    label_name = "junco"
+    image_path = "./data/dog.jpg"
+    image_name = "samoyed"
+    label_name = "Samoyed"
     explanation_norm_type = "scale"
     zero_out_threshold = 0.01
     path = './outputs/results_' + image_name + "_" + \
@@ -165,13 +204,13 @@ if __name__ == '__main__':
     prettyprint_tuple(topk_pred_ig)
     output_predictions(topk_pred_ig, path, result_type="Integrated Gradient prediction", output_type="a")
 
-    max_threshold, max_probability = evaluate_pixel_based_methods_max_probability(explanation=explanation_ig,
-                                                                                  input_image=input_image,
-                                                                                  image_name=image_name + "_ig",
-                                                                                  model=MODEL,
-                                                                                  categories=CATEGORIES,
-                                                                                  correct_label=label_name,
-                                                                                  explanation_norm_type='std')
+    max_threshold, max_probability = evaluate_pixel_based_methods_percentile_range(explanation=explanation_ig,
+                                                                                   input_image=input_image,
+                                                                                   image_name=image_name + "_ig",
+                                                                                   model=MODEL,
+                                                                                   categories=CATEGORIES,
+                                                                                   correct_label=label_name,
+                                                                                   explanation_norm_type='std')
 
     print(f'Maximum Probability of {label_name}: {max_probability}')
     print(f'Maximum Threshold: {max_threshold}')
@@ -190,13 +229,13 @@ if __name__ == '__main__':
     prettyprint_tuple(topk_pred_ldm)
     output_predictions(topk_pred_ldm, path, result_type="Local Data Matrix prediction", output_type="a")
 
-    max_threshold, max_probability = evaluate_pixel_based_methods_max_probability(explanation=explanation_ldm,
-                                                                                  input_image=input_image,
-                                                                                  image_name=image_name + "_ldm",
-                                                                                  model=MODEL,
-                                                                                  categories=CATEGORIES,
-                                                                                  correct_label=label_name,
-                                                                                  explanation_norm_type='std')
+    max_threshold, max_probability = evaluate_pixel_based_methods_percentile_range(explanation=explanation_ldm,
+                                                                                   input_image=input_image,
+                                                                                   image_name=image_name + "_ldm",
+                                                                                   model=MODEL,
+                                                                                   categories=CATEGORIES,
+                                                                                   correct_label=label_name,
+                                                                                   explanation_norm_type='std')
 
     print(f'Maximum Probability of {label_name}: {max_probability}')
     print(f'Maximum Threshold: {max_threshold}')
@@ -220,4 +259,3 @@ if __name__ == '__main__':
     print("\nLIME prediction 20 features")
     prettyprint_tuple(topk_pred_lime)
     output_predictions(topk_pred_lime, path, result_type="LIME prediction 20 features", output_type="a")
-
