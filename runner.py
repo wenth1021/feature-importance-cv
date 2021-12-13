@@ -165,9 +165,9 @@ def evaluate_lime(lime_explanation, input_image, model, categories, image_name, 
 
 if __name__ == '__main__':
     # setting vars
-    image_path = "data/fireboat.jpeg"
-    image_name = "fireboat"
-    label_name = "fireboat"
+    image_path = "data/junco.jpeg"
+    image_name = "junco"
+    label_name = "junco"
     explanation_norm_type = "none"
     path = './outputs/results_' + image_name + '_' + explanation_norm_type + '.txt'
 
@@ -215,7 +215,7 @@ if __name__ == '__main__':
         explanation=explanation_ig,
         input_image=input_image,
         image=image,
-        image_name=image_name,
+        image_name=image_name + "_ig",
         explanation_norm_type="none"
     )
 
@@ -241,7 +241,7 @@ if __name__ == '__main__':
         explanation=explanation_ldm,
         input_image=input_image,
         image=image,
-        image_name=image_name,
+        image_name=image_name + "_ldm",
         explanation_norm_type="none"
     )
 
