@@ -1,0 +1,21 @@
+Original_prediction
+(0.97269326, 554, 'fireboat')
+(0.02241052, 718, 'pier')
+(0.0010487969, 517, 'crane')
+(0.0008778324, 821, 'steel arch bridge')
+(0.00079347537, 839, 'suspension bridge')
+
+LIME prediction 5 features
+(0.9070915, 554, 'fireboat')
+(0.0114718955, 460, 'breakwater')
+(0.010658539, 871, 'trimaran')
+(0.008225534, 780, 'schooner')
+(0.006304264, 510, 'container ship')
+
+LIME prediction 20 features
+(0.99867463, 554, 'fireboat')
+(0.00042380707, 718, 'pier')
+(0.00038190337, 562, 'fountain')
+(0.00019755434, 821, 'steel arch bridge')
+(8.040478e-05, 871, 'trimaran')
+

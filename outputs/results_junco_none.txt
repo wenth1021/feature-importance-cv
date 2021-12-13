@@ -1,0 +1,21 @@
+Original_prediction
+(0.9989724, 13, 'junco')
+(0.0004185456, 16, 'bulbul')
+(0.00018541947, 20, 'water ouzel')
+(0.00017321178, 15, 'robin')
+(7.429837e-05, 12, 'house finch')
+
+LIME prediction 5 features
+(0.24674132, 13, 'junco')
+(0.10056135, 812, 'space shuttle')
+(0.09368049, 755, 'radio telescope')
+(0.042877052, 80, 'black grouse')
+(0.041525748, 137, 'American coot')
+
+LIME prediction 20 features
+(0.9780839, 13, 'junco')
+(0.0078053377, 19, 'chickadee')
+(0.0052527445, 12, 'house finch')
+(0.0029567264, 16, 'bulbul')
+(0.0023378748, 15, 'robin')
+

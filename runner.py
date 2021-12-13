@@ -110,8 +110,8 @@ def evaluate_pixel_based_methods_range(explanation, input_image, image_name, mod
     return max_percentile, max_probability
 
 
-def evaluate_pixel_based_methods_features_range(explanation, input_image, image_name, model, categories,
-                                                correct_label, explanation_norm_type, num_x, x_type):
+def evaluate_pixel_based_methods_percentile_agg_range(explanation, input_image, image_name, model, categories,
+                                                      correct_label, explanation_norm_type, num_x, x_type):
     # takes in single image!
     explanation = normalize_arr(explanation, explanation_norm_type=explanation_norm_type)
     agg_explanation = explanation.sum(dim=1)
@@ -161,9 +161,9 @@ def evaluate_lime(lime_explanation, input_image, model, categories, image_name, 
 
 if __name__ == '__main__':
     # setting vars
-    image_path = "./data/dog.jpg"
-    image_name = "samoyed"
-    label_name = "Samoyed"
+    image_path = "data/junco.jpeg"
+    image_name = "junco"
+    label_name = "junco"
     explanation_norm_type = "none"
     path = './outputs/results_' + image_name + '_' + explanation_norm_type + '.txt'
 
@@ -208,6 +208,7 @@ if __name__ == '__main__':
     step = 50
     explanation_ig = get_explanation_ig(MODEL, input_batch, CATEGORIES, label_name)
 
+    # ig - percentile
     max_percentile, max_probability = evaluate_pixel_based_methods_range(
         explanation=explanation_ig,
         input_image=input_image,
@@ -219,13 +220,31 @@ if __name__ == '__main__':
         num_x=200,
         x_type="percentile",
     )
-
     print("\nIntegrated Gradient")
     print(f'Maximum Probability of {label_name}: {max_probability}')
     print(f'Percentile with Maximum Probability: {max_percentile}')
 
+    # ig - percentile agg
+    max_percentile_agg, max_probability = evaluate_pixel_based_methods_percentile_agg_range(
+        explanation=explanation_ig,
+        input_image=input_image,
+        image_name=image_name + "_ig",
+        model=MODEL,
+        categories=CATEGORIES,
+        correct_label=label_name,
+        explanation_norm_type=explanation_norm_type,
+        num_x=200,
+        x_type="percentile_agg"
+    )
+
+    print("\nIntegrated Gradient")
+    print(f'Maximum Probability of {label_name}: {max_probability}')
+    print(f'Aggregated Percentile with Maximum Probability: {max_percentile}')
+
     # local data matrix
     explanation_ldm = get_explanation_ldm(MODEL, input_batch)
+
+    # ldm - percentile
     max_percentile, max_probability = evaluate_pixel_based_methods_range(
         explanation=explanation_ldm,
         input_image=input_image,
@@ -241,3 +260,20 @@ if __name__ == '__main__':
     print("\nLocal Data Matrix")
     print(f'Maximum Probability of {label_name}: {max_probability}')
     print(f'Percentile with Maximum Probability: {max_percentile}')
+
+    # ldm - percentile agg
+    max_percentile, max_probability = evaluate_pixel_based_methods_percentile_agg_range(
+        explanation=explanation_ldm,
+        input_image=input_image,
+        image_name=image_name + "_idm",
+        model=MODEL,
+        categories=CATEGORIES,
+        correct_label=label_name,
+        explanation_norm_type=explanation_norm_type,
+        num_x=200,
+        x_type="percentile_add",
+    )
+
+    print("\nLocal Data Matrix")
+    print(f'Maximum Probability of {label_name}: {max_probability}')
+    print(f'Aggregated Percentile with Maximum Probability: {max_percentile}')
