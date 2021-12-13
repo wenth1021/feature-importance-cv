@@ -130,9 +130,9 @@ def evaluate_lime(lime_explanation, input_image, model, categories, image_name, 
 
 if __name__ == '__main__':
     # setting vars
-    image_path = "./data/fireboat.jpeg"
-    image_name = "fireboat"
-    label_name = "fireboat"
+    image_path = "./data/bird.jpeg"
+    image_name = "bird"
+    label_name = "junco"
     explanation_norm_type = "scale"
     zero_out_threshold = 0.01
     path = './outputs/results_' + image_name + "_" + \
@@ -167,11 +167,11 @@ if __name__ == '__main__':
 
     max_threshold, max_probability = evaluate_pixel_based_methods_max_probability(explanation=explanation_ig,
                                                                                   input_image=input_image,
-                                                                                  image_name=image_name + "_ig" + "_" + explanation_norm_type,
+                                                                                  image_name=image_name + "_ig",
                                                                                   model=MODEL,
                                                                                   categories=CATEGORIES,
                                                                                   correct_label=label_name,
-                                                                                  explanation_norm_type=explanation_norm_type)
+                                                                                  explanation_norm_type='std')
 
     print(f'Maximum Probability of {label_name}: {max_probability}')
     print(f'Maximum Threshold: {max_threshold}')
@@ -196,7 +196,7 @@ if __name__ == '__main__':
                                                                                   model=MODEL,
                                                                                   categories=CATEGORIES,
                                                                                   correct_label=label_name,
-                                                                                  explanation_norm_type=explanation_norm_type)
+                                                                                  explanation_norm_type='std')
 
     print(f'Maximum Probability of {label_name}: {max_probability}')
     print(f'Maximum Threshold: {max_threshold}')

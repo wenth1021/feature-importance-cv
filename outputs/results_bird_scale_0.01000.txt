@@ -1,0 +1,7 @@
+Original_prediction
+(0.9989724, 13, 'junco')
+(0.0004185456, 16, 'bulbul')
+(0.00018541949, 20, 'water ouzel')
+(0.00017321178, 15, 'robin')
+(7.429837e-05, 12, 'house finch')
+
