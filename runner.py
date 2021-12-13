@@ -38,8 +38,8 @@ def plot_output_range(x_range, prob_correct_label, output_name_tag):
     ax.set_ylabel('Probability of Correct Label')
     ax.text(0.7, 0.95, textstr, transform=ax.transAxes, fontsize=10,
             verticalalignment='top', bbox=props)
-    plt.show()
     plt.savefig(PLOT_OUTPUT_PATH + output_name_tag + ".jpg")
+    # plt.show()
     return max_x, max_probability
 
 
@@ -165,8 +165,7 @@ if __name__ == '__main__':
     image_name = "samoyed"
     label_name = "Samoyed"
     explanation_norm_type = "scale"
-    path = './outputs/results_' + image_name + "_" + \
-           explanation_norm_type + "_" + '.txt'
+    path = './outputs/results_' + image_name + '_' + explanation_norm_type + '.txt'
 
     # load image
     image = PIL.Image.open(image_path)
@@ -182,19 +181,25 @@ if __name__ == '__main__':
     # lime
     features_to_plot = (10, 30, 80)
     lime_explanation = get_lime_explainer(image, top_label=0, num_features=5)
-    topk_pred_lime = evaluate_lime(lime_explanation, input_image=input_image,
-                                   image_name=image_name + "_lime_5", model=MODEL,
-                                   categories=CATEGORIES,
-                                   num_features_tuple_plot=features_to_plot)
+    topk_pred_lime = evaluate_lime(
+        lime_explanation=lime_explanation,
+        input_image=input_image,
+        image_name=image_name + "_lime_5",
+        model=MODEL,
+        categories=CATEGORIES,
+        num_features_tuple_plot=features_to_plot)
     print("\nLIME prediction 5 features")
     prettyprint_tuple(topk_pred_lime)
     output_predictions(topk_pred_lime, path, result_type="LIME prediction 5 features", output_type="a")
 
     lime_explanation = get_lime_explainer(image, top_label=0, num_features=20)
-    topk_pred_lime = evaluate_lime(lime_explanation, input_image=input_image,
-                                   image_name=image_name + "_lime_20", model=MODEL,
-                                   categories=CATEGORIES,
-                                   num_features_tuple_plot=features_to_plot)
+    topk_pred_lime = evaluate_lime(
+        lime_explanation=lime_explanation,
+        input_image=input_image,
+        image_name=image_name + "_lime_20",
+        model=MODEL,
+        categories=CATEGORIES,
+        num_features_tuple_plot=features_to_plot)
     print("\nLIME prediction 20 features")
     prettyprint_tuple(topk_pred_lime)
     output_predictions(topk_pred_lime, path, result_type="LIME prediction 20 features", output_type="a")
@@ -210,29 +215,29 @@ if __name__ == '__main__':
         model=MODEL,
         categories=CATEGORIES,
         correct_label=label_name,
-        explanation_norm_type='std',
+        explanation_norm_type='none',
         num_x=200,
         x_type="percentile",
     )
 
+    print("\nIntegrated Gradient")
     print(f'Maximum Probability of {label_name}: {max_probability}')
     print(f'Percentile with Maximum Probability: {max_percentile}')
 
     # local data matrix
     explanation_ldm = get_explanation_ldm(MODEL, input_batch)
     max_percentile, max_probability = evaluate_pixel_based_methods_range(
-        explanation=explanation_ig,
+        explanation=explanation_ldm,
         input_image=input_image,
-        image_name=image_name + "_ig",
+        image_name=image_name + "_idm",
         model=MODEL,
         categories=CATEGORIES,
         correct_label=label_name,
-        explanation_norm_type='std',
+        explanation_norm_type='none',
         num_x=200,
         x_type="percentile",
     )
 
+    print("\nLocal Data Matrix")
     print(f'Maximum Probability of {label_name}: {max_probability}')
     print(f'Percentile with Maximum Probability: {max_percentile}')
-
-
