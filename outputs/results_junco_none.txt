@@ -5,17 +5,3 @@ Original_prediction
 (0.00017321178, 15, 'robin')
 (7.429837e-05, 12, 'house finch')
 
-LIME prediction 5 features
-(0.38252422, 87, 'African grey')
-(0.13612202, 137, 'American coot')
-(0.07643323, 13, 'junco')
-(0.07259169, 20, 'water ouzel')
-(0.05306279, 181, 'Bedlington terrier')
-
-LIME prediction 20 features
-(0.9948783, 13, 'junco')
-(0.0015732719, 20, 'water ouzel')
-(0.0008805903, 16, 'bulbul')
-(0.0005295206, 12, 'house finch')
-(0.0004697834, 137, 'American coot')
-
