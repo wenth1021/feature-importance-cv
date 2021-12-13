@@ -110,30 +110,34 @@ def evaluate_pixel_based_methods_range(explanation, input_image, image_name, mod
     return max_percentile, max_probability
 
 
-def evaluate_pixel_based_methods_percentile_agg_range(explanation, input_image, image_name, model, categories,
-                                                      correct_label, explanation_norm_type, num_x, x_type):
-    # takes in single image!
-    explanation = normalize_arr(explanation, explanation_norm_type=explanation_norm_type)
-    agg_explanation = explanation.sum(dim=1)
-    prob_correct_label = []
-    x_range = np.arange(num_x) * 1 / num_x
-
-    for i in range(x_range.shape[0]):
-        input_image_w_gradient = input_image.clone()
-        x = torch.quantile(abs(agg_explanation), x_range[i])
-        keep_matrix = agg_explanation > x
-        # set all chanel value to 0
-        for c in range(input_image_w_gradient.shape[0]):
-            input_image_w_gradient[c] = input_image_w_gradient * keep_matrix
-        output = model(input_image_w_gradient.unsqueeze(0))
-        probabilities = torch.nn.functional.softmax(output[-1], dim=0)
-        prob = probabilities[categories.index(correct_label)].item()
-        prob_correct_label.append(prob)
-
-    # plot range
-    output_name_tag = image_name + "_" + x_type
-    max_x, max_probability = plot_output_range(x_range, prob_correct_label, output_name_tag)
-    return max_x, max_probability
+# def evaluate_pixel_based_methods_percentile_agg_range(explanation, input_image, image_name, model, categories,
+#                                                       correct_label, explanation_norm_type, num_x, x_type):
+#     # takes in single image!
+#     explanation = normalize_arr(explanation, explanation_norm_type=explanation_norm_type)
+#     agg_explanation = explanation.mean(dim=0)
+#     prob_correct_label = []
+#     x_range = np.arange(num_x) * 1 / num_x
+#
+#     for i in range(x_range.shape[0]):
+#         input_image_w_gradient = input_image.clone()
+#         x = torch.quantile(abs(agg_explanation), x_range[i])
+#         keep_matrix = agg_explanation > x
+#         # set all chanel value to 0
+#         for c in range(input_image_w_gradient.shape[0]):
+#             input_image_w_gradient[c] = input_image_w_gradient[c] * keep_matrix
+#         output = model(input_image_w_gradient.unsqueeze(0))
+#         probabilities = torch.nn.functional.softmax(output[-1], dim=0)
+#         prob = probabilities[categories.index(correct_label)].item()
+#         prob_correct_label.append(prob)
+#         print(get_topk_pred(input_image_w_gradient, MODEL, CATEGORIES))
+#         if i < 5:
+#             plt.imshow(input_image_w_gradient.permute(1, 2, 0))
+#             plt.show()
+#
+#     # plot range
+#     output_name_tag = image_name + "_" + x_type
+#     max_x, max_probability = plot_output_range(x_range, prob_correct_label, output_name_tag)
+#     return max_x, max_probability
 
 
 # LIME.
@@ -224,22 +228,22 @@ if __name__ == '__main__':
     print(f'Maximum Probability of {label_name}: {max_probability}')
     print(f'Percentile with Maximum Probability: {max_percentile}')
 
-    # ig - percentile agg
-    max_percentile_agg, max_probability = evaluate_pixel_based_methods_percentile_agg_range(
-        explanation=explanation_ig,
-        input_image=input_image,
-        image_name=image_name + "_ig",
-        model=MODEL,
-        categories=CATEGORIES,
-        correct_label=label_name,
-        explanation_norm_type=explanation_norm_type,
-        num_x=200,
-        x_type="percentile_agg"
-    )
-
-    print("\nIntegrated Gradient")
-    print(f'Maximum Probability of {label_name}: {max_probability}')
-    print(f'Aggregated Percentile with Maximum Probability: {max_percentile}')
+    # # ig - percentile agg
+    # max_percentile_agg, max_probability = evaluate_pixel_based_methods_percentile_agg_range(
+    #     explanation=explanation_ig,
+    #     input_image=input_image,
+    #     image_name=image_name + "_ig",
+    #     model=MODEL,
+    #     categories=CATEGORIES,
+    #     correct_label=label_name,
+    #     explanation_norm_type=explanation_norm_type,
+    #     num_x=200,
+    #     x_type="percentile_agg"
+    # )
+    #
+    # print("\nIntegrated Gradient")
+    # print(f'Maximum Probability of {label_name}: {max_probability}')
+    # print(f'Aggregated Percentile with Maximum Probability: {max_percentile_agg}')
 
     # local data matrix
     explanation_ldm = get_explanation_ldm(MODEL, input_batch)
@@ -248,7 +252,7 @@ if __name__ == '__main__':
     max_percentile, max_probability = evaluate_pixel_based_methods_range(
         explanation=explanation_ldm,
         input_image=input_image,
-        image_name=image_name + "_idm",
+        image_name=image_name + "_ldm",
         model=MODEL,
         categories=CATEGORIES,
         correct_label=label_name,
@@ -261,19 +265,19 @@ if __name__ == '__main__':
     print(f'Maximum Probability of {label_name}: {max_probability}')
     print(f'Percentile with Maximum Probability: {max_percentile}')
 
-    # ldm - percentile agg
-    max_percentile, max_probability = evaluate_pixel_based_methods_percentile_agg_range(
-        explanation=explanation_ldm,
-        input_image=input_image,
-        image_name=image_name + "_idm",
-        model=MODEL,
-        categories=CATEGORIES,
-        correct_label=label_name,
-        explanation_norm_type=explanation_norm_type,
-        num_x=200,
-        x_type="percentile_add",
-    )
-
-    print("\nLocal Data Matrix")
-    print(f'Maximum Probability of {label_name}: {max_probability}')
-    print(f'Aggregated Percentile with Maximum Probability: {max_percentile}')
+    # # ldm - percentile agg
+    # max_percentile_agg, max_probability = evaluate_pixel_based_methods_percentile_agg_range(
+    #     explanation=explanation_ldm,
+    #     input_image=input_image,
+    #     image_name=image_name + "_ldm",
+    #     model=MODEL,
+    #     categories=CATEGORIES,
+    #     correct_label=label_name,
+    #     explanation_norm_type=explanation_norm_type,
+    #     num_x=200,
+    #     x_type="percentile_agg",
+    # )
+    #
+    # print("\nLocal Data Matrix")
+    # print(f'Maximum Probability of {label_name}: {max_probability}')
+    # print(f'Aggregated Percentile with Maximum Probability: {max_percentile_agg}')
