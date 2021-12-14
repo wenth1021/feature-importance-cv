@@ -3,7 +3,6 @@ Please see final branch for the repo.
 
 
 We explored and compared three methods of computing feature importance:
-
-Integrated Gradients
-Local Data Matrix
-LIME
+* Integrated Gradients
+* Local Data Matrix
+* LIME
