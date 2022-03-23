@@ -15,6 +15,7 @@ def get_eigenvectors_ldm(model, input_batch, categories, label_name):
     for i in range(log_prob.shape[-1]):
         index = torch.zeros_like(log_prob)
         index[..., i] = 1
+        input_batch.grad.zero_()
         log_prob.backward(index, retain_graph=True)
         grad_vecs[i] += input_batch.grad.view(-1) * prob[..., i].sqrt()
 
@@ -33,6 +34,7 @@ def get_eigenvectors_ldm(model, input_batch, categories, label_name):
 
     # inference
     input_batch.requires_grad = True
+    input_batch.grad.zero_()
     output = model(input_batch)
 
     # get gradient for input
