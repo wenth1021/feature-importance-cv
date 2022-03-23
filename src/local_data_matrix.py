@@ -15,9 +15,9 @@ def get_eigenvectors_ldm(model, input_batch, categories, label_name):
     for i in range(log_prob.shape[-1]):
         index = torch.zeros_like(log_prob)
         index[..., i] = 1
-        input_batch.grad.zero_()
         log_prob.backward(index, retain_graph=True)
         grad_vecs[i] += input_batch.grad.view(-1) * prob[..., i].sqrt()
+        input_batch.grad.zero_()
 
     # Get rank-1 approximation 
     u, s, v = torch.svd_lowrank(grad_vecs.T, q=100, niter=5)  # u is the eigenvalue of the grad_vecs
